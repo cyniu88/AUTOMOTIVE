@@ -1,43 +1,30 @@
-#define PinA 2  
-#define PinB 3  
+#define BluetoothRS232 Serial1
 
-unsigned long time = 0; 
-long count = 0; 
-long num = 0;
 
+String st = "kupa";
 
 void setup()
 {
   Serial.begin(9600);
-
-  pinMode(PinA,INPUT); 
-  pinMode(PinB,INPUT); 
-
-  attachInterrupt(0, blinkA, LOW);  
-  attachInterrupt(1, blinkB, LOW);  
-
-  time = millis(); 
+  BluetoothRS232.begin(38400);
+  Serial.println("setup done");
 }
 
 void loop()
 {
-  while (num != count)
-  {
-    num = count;
-    Serial.println(num);
+  if (Serial.available()) {
+    st = Serial.readStringUntil(';');
+
+    Serial.println("bangla sobie");
+    BluetoothRS232.flush();
+    BluetoothRS232.print(st);
+    BluetoothRS232.print("\r\n");
+
+ 
+
+    st = BluetoothRS232.readStringUntil("OK");
+    delay(100);
+    Serial.println(st);
   }
 }
 
-void blinkA()
-{
-  if ((millis() - time) > 3)
-        count ++; 
-  time = millis();
-}
-
-void blinkB()
-{
-  if ((millis() - time) > 3)  
-        count --;
-  time = millis();
-}
