@@ -5,7 +5,7 @@
 class USEFUL
 {
   public:
-   static unsigned int hexToDec(String hexString);
+    static unsigned int hexToDec(String hexString);
 };
 #endif
 
