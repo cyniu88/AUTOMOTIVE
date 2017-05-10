@@ -17,6 +17,18 @@ String ELM327::recvATCommand(){
    }
   return recvString;
 }
+void ELM327::sendATCommandToOBDII(String cmd){
+  Serial1.print(cmd);
+  Serial1.print("\r\n");
+}
+String ELM327::recvFromOBDII(){
+  String recvString = "NULL";
+   while (Serial1.available() > 0) {
+    recvString += Serial.read();
+   }
+  return recvString;
+}
+
 void ELM327::init(int bitrate,byte statePin, byte ATpin) {
   Serial1.begin(bitrate);
   m_statePin = statePin;
@@ -64,3 +76,11 @@ void ELM327::connectingToELM327BT(String MAC_ELM327){
   recvATCommand();
 }
 
+int ELM327::engineCoolantTemperature(){
+  int temperature = 0;
+  String temp;
+  sendATCommandToOBDII("0105");
+  temp = recvFromOBDII();
+  temperature = USEFUL::hexToDec(temp.substring(4));
+  return temperature - 40;
+}
