@@ -25,6 +25,6 @@ else {
   Serial.println("nie podlaczony");
 }
 
-  
+  delay(100);
 }
 
