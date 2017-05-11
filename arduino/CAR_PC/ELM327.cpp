@@ -11,9 +11,11 @@ void ELM327::sendATCommand(String command) {
   Serial1.write("\r\n");
 }
 String ELM327::recvATCommand() {
-  String recvString = "NULL";
+  String recvString;
+  Serial.print("recv: "); 
+  delay(100);
   while (Serial1.available() > 0) {
-    recvString += Serial.read();
+    recvString += Serial1.readString();
   }
   return recvString;
 }
@@ -39,8 +41,7 @@ void ELM327::init(unsigned int bitrate, byte statePin, byte ATpin) {
 
 bool ELM327::isConnectedToBluetooth() {
   //Serial1.flush();
-  Serial1.write("AT");
-  Serial1.write("\r\n");
+  sendATCommand("AT");
   String buf  = Serial1.readStringUntil('\n');
   Serial.print("odebralem: ");
   Serial.println(buf);
@@ -59,27 +60,40 @@ bool  ELM327::isELM327Connected() {
   return false;
 }
 void ELM327::connectingToELM327BT(String MAC_ELM327) {
-  sendATCommand("AT+RESET");
+
+  isConnectedToBluetooth();
+  //sendATCommand("AT+RESET");
 
   delay(1000);
-  sendATCommand("AT+ROLE=1");
-  recvATCommand();
-  sendATCommand("AT+CMODE=0");
-  recvATCommand();
-  sendATCommand("AT+INIT");
-  recvATCommand();
-  delay(1000);
+  isConnectedToBluetooth();
+  Serial.println("version");
+  sendATCommand("AT+VERSION"  );
+  Serial.print(recvATCommand());
+//  Serial.println("ROLE=1");
+//  sendATCommand("AT+ROLE=1");
+//  Serial.println(recvATCommand());
+//  Serial.println("CMODE");
+//  sendATCommand("AT+CMODE=0");
+//  Serial.println(recvATCommand());
+//  Serial.println("INIT");
+//  sendATCommand("AT+INIT");
+//  Serial.println(recvATCommand());
+//  delay(1000);
+  Serial.println("BIND");
   sendATCommand("AT+BIND=" + MAC_ELM327);
-  recvATCommand();
+  Serial.println(recvATCommand());
   delay(3000);
+  Serial.println("PAIR");
   sendATCommand("AT+PAIR=" + MAC_ELM327 + ",10");
-  recvATCommand();
+  Serial.println(recvATCommand());
   delay(3000);
+  Serial.println("LINK");
   sendATCommand("AT+LINK=" + MAC_ELM327);
-  recvATCommand();
-
+  Serial.println(recvATCommand());
+  Serial.println("SP");
   sendATCommand("AT SP 0");
-  recvATCommand();
+  Serial.println(recvATCommand());
+  Serial.println("done");
 }
 
 int ELM327::engineCoolantTemperature() {
