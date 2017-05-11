@@ -14,7 +14,7 @@ class ELM327
   public:
     ELM327();
     ~ELM327();
-    void init(int bitrate, byte statePin, byte ATpin);
+    void init(unsigned int bitrate, byte statePin, byte ATpin);
     bool isConnectedToBluetooth();
     bool isELM327Connected();
     void connectingToELM327BT(String MAC_ELM327);

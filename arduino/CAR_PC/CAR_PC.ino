@@ -7,6 +7,10 @@ void setup()
 {
   Serial.begin(9600);
   elm327.init(38400, stateHC05pin, ATpin);
+  Serial.println("wait for connection");
+  while (!elm327.isConnectedToBluetooth()){
+    Serial.print('.');
+  }
   Serial.println("setup done");
 }
 
@@ -15,16 +19,10 @@ void loop()
   if (Serial.available()) {
     Serial.println("bangla sobie");
     delay(100);
-   // Serial.println(st);
+   Serial.read();
   }
 
-if (elm327.isConnectedToBluetooth() == true){
-  Serial.println("polaczony do bluetooth");
-}
-else {
-  Serial.println("nie podlaczony");
-}
 
-  delay(100);
+  delay(1000);
 }
 

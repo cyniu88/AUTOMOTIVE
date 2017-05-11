@@ -8,7 +8,7 @@ ELM327::~ELM327() {
 }
 void ELM327::sendATCommand(String command) {
   Serial1.print(command);
-  Serial1.print("\r\n");
+  Serial1.write("\r\n");
 }
 String ELM327::recvATCommand() {
   String recvString = "NULL";
@@ -29,25 +29,29 @@ String ELM327::recvFromOBDII() {
   return recvString;
 }
 
-void ELM327::init(int bitrate, byte statePin, byte ATpin) {
+void ELM327::init(unsigned int bitrate, byte statePin, byte ATpin) {
   Serial1.begin(bitrate);
   m_statePin = statePin;
+  pinMode(m_statePin, INPUT);
   m_ATpin = ATpin;
+  pinMode(m_ATpin, OUTPUT);
 }
 
 bool ELM327::isConnectedToBluetooth() {
-  Serial1.flush();
-  Serial1.print("AT");
-  Serial1.print("\r\n");
-  String buf = Serial1.readString();
-  if (buf == "OK")
+  //Serial1.flush();
+  Serial1.write("AT");
+  Serial1.write("\r\n");
+  String buf  = Serial1.readStringUntil('\n');
+  Serial.print("odebralem: ");
+    Serial.println(buf);
+  if (buf[0] == 'O' && buf[1] =='K')
   {
     return true;
   }
   return false;
 }
 bool  ELM327::isELM327Connected() {
-  sendATCommand("ATi");
+  sendATCommand("ATI");
   if ( recvATCommand() == "OK" && digitalRead(m_statePin) == HIGH)
   {
     return true;
