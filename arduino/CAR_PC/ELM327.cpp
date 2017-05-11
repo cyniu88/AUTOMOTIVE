@@ -43,7 +43,7 @@ bool ELM327::isConnectedToBluetooth() {
   Serial1.write("\r\n");
   String buf  = Serial1.readStringUntil('\n');
   Serial.print("odebralem: ");
-    Serial.println(buf);
+  Serial.println(buf);
   if (buf[0] == 'O' && buf[1] =='K')
   {
     return true;
@@ -97,5 +97,14 @@ double ELM327::fuelTankLevel(){
   temp = recvFromOBDII();
   level = USEFUL::hexToDec(temp.substring(4));
   return (level*100)/255;
+}
+
+double ELM327::getVoltage(){
+  double level;
+  String temp;
+  sendATCommandToOBDII("ATRV");
+  temp = recvFromOBDII();
+  level = temp.toInt();
+  return level;
 }
 
