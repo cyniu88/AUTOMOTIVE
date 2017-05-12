@@ -3,6 +3,8 @@
 ELM327 elm327;
 const byte stateHC05pin = 3;
 const byte ATpin = 4;
+String bufor;
+
 void setup()
 {
   Serial.begin(9600);
@@ -19,7 +21,14 @@ void setup()
 void loop()
 {
   if (Serial.available()>0){
-    USEFUL::freeMode();
+    while (Serial.available() > 0) {
+        bufor += Serial.readString();
+      }
+      if (bufor[0]=='f'){
+        USEFUL::freeMode();
+        bufor="";
+      }
+    
   }
   Serial.println("working");
   delay(1000);
