@@ -2,6 +2,7 @@
 #define ELM327_H
 #include <Arduino.h>
 #include "useful.h"
+
 class ELM327
 {
     byte m_statePin;

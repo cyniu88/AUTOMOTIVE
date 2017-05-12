@@ -22,6 +22,7 @@ void loop()
     USEFUL::freeMode();
   }
   Serial.println("working");
+  Serial.println(elm327.getVoltage());
   delay(1000);
 }
 

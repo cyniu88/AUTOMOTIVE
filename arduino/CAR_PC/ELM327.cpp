@@ -1,4 +1,5 @@
 #include "ELM327.h"
+HardwareSerial & SerialBluetooth = Serial1;
 
 ELM327::ELM327() {
 
@@ -7,32 +8,33 @@ ELM327::~ELM327() {
 
 }
 void ELM327::sendATCommand(String command) {
-  Serial1.print(command);
-  Serial1.write("\r\n");
+  SerialBluetooth.print(command);
+  SerialBluetooth.write("\r\n");
 }
 String ELM327::recvATCommand() {
   String recvString;
-  Serial.print("recv: "); 
+  Serial.print("recv: ");
   delay(100);
-  while (Serial1.available() > 0) {
-    recvString += Serial1.readString();
+  while (SerialBluetooth.available() > 0) {
+    recvString += SerialBluetooth.readString();
   }
   return recvString;
 }
 void ELM327::sendATCommandToOBDII(String cmd) {
-  Serial1.print(cmd);
-  Serial1.print("\r\n");
+  SerialBluetooth.print(cmd);
+  SerialBluetooth.write("\r\n");
 }
 String ELM327::recvFromOBDII() {
-  String recvString = "NULL";
-  while (Serial1.available() > 0) {
-    recvString += Serial.read();
+  String recvString;
+  delay(100);
+  while (SerialBluetooth.available() > 0) {
+    recvString += SerialBluetooth.readString();
   }
   return recvString;
 }
 
 void ELM327::init(unsigned int bitrate, byte statePin, byte ATpin) {
-  Serial1.begin(bitrate);
+  SerialBluetooth.begin(bitrate);
   m_statePin = statePin;
   pinMode(m_statePin, INPUT);
   m_ATpin = ATpin;
@@ -40,12 +42,19 @@ void ELM327::init(unsigned int bitrate, byte statePin, byte ATpin) {
 }
 
 bool ELM327::isConnectedToBluetooth() {
-  //Serial1.flush();
+  //SerialBluetooth.flush();
+  if (digitalRead(m_statePin) == HIGH) {
+    sendATCommand("ATI");
+    String buf  = SerialBluetooth.readStringUntil('\n');
+    Serial.print("odebralem w low: ");
+    Serial.println(buf);
+    return true;
+  }
   sendATCommand("AT");
-  String buf  = Serial1.readStringUntil('\n');
+  String buf  = SerialBluetooth.readStringUntil('\n');
   Serial.print("odebralem: ");
   Serial.println(buf);
-  if (buf[0] == 'O' && buf[1] =='K')
+  if (buf[0] == 'O' && buf[1] == 'K')
   {
     return true;
   }
@@ -69,16 +78,16 @@ void ELM327::connectingToELM327BT(String MAC_ELM327) {
   Serial.println("version");
   sendATCommand("AT+VERSION"  );
   Serial.print(recvATCommand());
-//  Serial.println("ROLE=1");
-//  sendATCommand("AT+ROLE=1");
-//  Serial.println(recvATCommand());
-//  Serial.println("CMODE");
-//  sendATCommand("AT+CMODE=0");
-//  Serial.println(recvATCommand());
-//  Serial.println("INIT");
-//  sendATCommand("AT+INIT");
-//  Serial.println(recvATCommand());
-//  delay(1000);
+  //  Serial.println("ROLE=1");
+  //  sendATCommand("AT+ROLE=1");
+  //  Serial.println(recvATCommand());
+  //  Serial.println("CMODE");
+  //  sendATCommand("AT+CMODE=0");
+  //  Serial.println(recvATCommand());
+  //  Serial.println("INIT");
+  //  sendATCommand("AT+INIT");
+  //  Serial.println(recvATCommand());
+  //  delay(1000);
   Serial.println("BIND");
   sendATCommand("AT+BIND=" + MAC_ELM327);
   Serial.println(recvATCommand());
@@ -104,20 +113,23 @@ int ELM327::engineCoolantTemperature() {
   temperature = USEFUL::hexToDec(temp.substring(4));
   return temperature - 40;
 }
-double ELM327::fuelTankLevel(){
+double ELM327::fuelTankLevel() {
   double level;
   String temp;
   sendATCommandToOBDII("012F");
   temp = recvFromOBDII();
   level = USEFUL::hexToDec(temp.substring(4));
-  return (level*100)/255;
+  return (level * 100) / 255;
 }
 
-double ELM327::getVoltage(){
+double ELM327::getVoltage() {
   double level;
-  String temp;
-  sendATCommandToOBDII("ATRV");
+  String temp="cyniu";
+  //sendATCommandToOBDII("AT RV");
+  sendATCommandToOBDII("AT+pswd");
   temp = recvFromOBDII();
+  Serial.println("odebralem voltage:" + temp);
+  temp=temp.substring(6);
   level = temp.toInt();
   return level;
 }
