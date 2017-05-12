@@ -20,15 +20,15 @@ void setup()
 
 void loop()
 {
-  if (Serial.available()>0){
+  if (Serial.available() > 0) {
     while (Serial.available() > 0) {
-        bufor += Serial.readString();
-      }
-      if (bufor[0]=='f'){
-        USEFUL::freeMode();
-        bufor="";
-      }
-    
+      bufor += Serial.readString();
+    }
+    if (bufor[0] == 'f') {
+      USEFUL::freeMode();
+      bufor = "";
+    }
+
   }
   Serial.println("working");
   delay(1000);
