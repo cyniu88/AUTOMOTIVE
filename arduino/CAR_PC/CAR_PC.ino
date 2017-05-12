@@ -18,13 +18,10 @@ void setup()
 
 void loop()
 {
-  if (Serial.available()) {
-    Serial1.write(Serial.read());
+  if (Serial.available()>0){
+    USEFUL::freeMode();
   }
-
-  if (Serial1.available()) {
-    Serial.write(Serial1.read());
-  }
-  delay(10);
+  Serial.println("working");
+  delay(1000);
 }
 

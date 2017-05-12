@@ -6,6 +6,7 @@ class USEFUL
 {
   public:
     static unsigned int hexToDec(String hexString);
+    static void freeMode();
 };
 #endif
 
