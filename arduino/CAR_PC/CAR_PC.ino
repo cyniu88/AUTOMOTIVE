@@ -28,10 +28,15 @@ void loop()
       USEFUL::freeMode();
       bufor = "";
     }
-
+    bufor="";
   }
   Serial.println("working");
-  Serial.println(elm327.getVoltage());
-  delay(1000);
+  Serial.print(elm327.getVoltage());
+  Serial.println(" VOLT");
+  Serial.print(elm327.engineCoolantTemperature());
+  Serial.println(" temperature");
+   Serial.print(elm327.fuelTankLevel());
+  Serial.println(" paliwo");
+  delay(100);
 }
 

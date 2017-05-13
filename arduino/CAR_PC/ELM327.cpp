@@ -110,7 +110,11 @@ int ELM327::engineCoolantTemperature() {
   String temp;
   sendATCommandToOBDII("0105");
   temp = recvFromOBDII();
-  temperature = USEFUL::hexToDec(temp.substring(4));
+//  
+  //Serial.println("odebralem temp:" + temp);
+  //Serial.println("odebralem temp:" + temp.substring(6,8));
+  temperature = USEFUL::hexToDec(temp.substring(6,8));
+  //delay(3000);
   return temperature - 40;
 }
 double ELM327::fuelTankLevel() {
@@ -118,19 +122,19 @@ double ELM327::fuelTankLevel() {
   String temp;
   sendATCommandToOBDII("012F");
   temp = recvFromOBDII();
-  level = USEFUL::hexToDec(temp.substring(4));
+  level = USEFUL::hexToDec(temp.substring(6,8));
   return (level * 100) / 255;
 }
 
-double ELM327::getVoltage() {
-  double level;
+float ELM327::getVoltage() {
+  float level;
   String temp="cyniu";
-  //sendATCommandToOBDII("AT RV");
-  sendATCommandToOBDII("AT+pswd");
+   sendATCommandToOBDII("AT RV");
+  //sendATCommandToOBDII("AT+pswd");
   temp = recvFromOBDII();
   Serial.println("odebralem voltage:" + temp);
-  temp=temp.substring(6);
-  level = temp.toInt();
+  temp=temp.substring(0,6);
+  level = temp.toFloat();
   return level;
 }
 
