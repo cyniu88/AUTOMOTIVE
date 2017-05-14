@@ -10,6 +10,7 @@ void setup()
   Serial.begin(9600);
   elm327.init(38400, stateHC05pin, ATpin);
   Serial.println("wait for connection");
+  
   while (!elm327.isConnectedToBluetooth()) {
     Serial.print('.');
   }
@@ -30,7 +31,7 @@ void loop()
     }
     bufor="";
   }
-  Serial.println("working");
+  //Serial.println("working");
   Serial.print(elm327.getVoltage());
   Serial.println(" VOLT");
   Serial.print(elm327.engineCoolantTemperature());

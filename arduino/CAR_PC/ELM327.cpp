@@ -50,12 +50,14 @@ bool ELM327::isConnectedToBluetooth() {
     Serial.println(buf);
     return true;
   }
+  digitalWrite(m_ATpin,HIGH);
   sendATCommand("AT");
   String buf  = SerialBluetooth.readStringUntil('\n');
   Serial.print("odebralem: ");
   Serial.println(buf);
   if (buf[0] == 'O' && buf[1] == 'K')
   {
+    digitalWrite(m_ATpin,LOW);
     return true;
   }
   return false;
@@ -110,11 +112,7 @@ int ELM327::engineCoolantTemperature() {
   String temp;
   sendATCommandToOBDII("0105");
   temp = recvFromOBDII();
-//  
-  //Serial.println("odebralem temp:" + temp);
-  //Serial.println("odebralem temp:" + temp.substring(6,8));
   temperature = USEFUL::hexToDec(temp.substring(6,8));
-  //delay(3000);
   return temperature - 40;
 }
 double ELM327::fuelTankLevel() {
