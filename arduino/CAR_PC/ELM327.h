@@ -22,5 +22,6 @@ class ELM327
     int engineCoolantTemperature();
     double fuelTankLevel();
     float getVoltage();
+    int engineLoad();
 };
 #endif

@@ -135,4 +135,12 @@ float ELM327::getVoltage() {
   level = temp.toFloat();
   return level;
 }
+int ELM327::engineLoad(){
+   int load = 0;
+  String temp;
+  sendATCommandToOBDII("0104");
+  temp = recvFromOBDII();
+  load = USEFUL::hexToDec(temp.substring(6,8));
+  return (load / 255)*100;
+}
 
