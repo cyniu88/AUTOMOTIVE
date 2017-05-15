@@ -7,13 +7,13 @@ OneWire oneWire(ONE_WIRE_BUS);
 
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
-#define TEMPERATURE_PRECISION 12
+#define TEMPERATURE_PRECISION 8
 // Ilość czujników
 #define SENSORS_NUM 2
 // Adresy czujników
 // arrays to hold device addresses
 DeviceAddress insideThermometer = {
-  0x28, 0x80, 0x3E, 0x64, 0x4, 0x0, 0x0, 0xD2
+  0x28, 0xFF, 0xAC, 0xBC, 0x80, 0x16, 0x05, 0xC2
 };
 
 ELM327 elm327;
