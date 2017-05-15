@@ -61,6 +61,8 @@ void loop()
   Serial.println(" temperature");
   Serial.print(elm327.fuelTankLevel());
   Serial.println(" paliwo");
+  Serial.print(elm327.engineLoad());
+  Serial.println(" obciazenie silnika");
   Serial.print(temperatureInside());
   Serial.println(" temperatura");
   delay(100);
