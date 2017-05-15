@@ -19,6 +19,7 @@ class ELM327
     bool isConnectedToBluetooth();
     bool isELM327Connected();
     void connectingToELM327BT(String MAC_ELM327);
+    void setupELM327();
     int engineCoolantTemperature();
     double fuelTankLevel();
     float getVoltage();

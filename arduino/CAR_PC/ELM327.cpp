@@ -106,6 +106,12 @@ void ELM327::connectingToELM327BT(String MAC_ELM327) {
   Serial.println(recvATCommand());
   Serial.println("done");
 }
+void ELM327::setupELM327(){
+  sendATCommand("AT E0");
+  Serial.println(recvATCommand());
+  sendATCommand("AT SP 0");
+  Serial.println(recvATCommand());
+}
 
 int ELM327::engineCoolantTemperature() {
   int temperature = 0;

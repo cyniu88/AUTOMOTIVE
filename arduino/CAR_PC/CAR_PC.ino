@@ -37,7 +37,7 @@ void setup()
   while (!elm327.isConnectedToBluetooth()) {
     Serial.print('.');
   }
-
+  elm327.setupELM327();
   //elm327.connectingToELM327BT("303A,64,D36B2E");
   Serial.println("setup done");
 }
