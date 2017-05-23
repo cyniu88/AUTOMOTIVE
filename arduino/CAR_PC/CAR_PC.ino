@@ -1,4 +1,5 @@
 #include "ELM327.h"
+#include "nextionLCD.h"
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
@@ -17,6 +18,7 @@ DeviceAddress insideThermometer = {
 };
 
 ELM327 elm327;
+NEXTION_LCD lcd;
 const byte stateHC05pin = 3;
 const byte ATpin = 4;
 String bufor;
@@ -27,6 +29,7 @@ double temperatureInside() {
 void setup()
 {
   Serial.begin(9600);
+  Serial2.begin(9600);
 
   sensors.begin();
   sensors.setResolution(insideThermometer , TEMPERATURE_PRECISION);
@@ -39,6 +42,7 @@ void setup()
   }
   elm327.setupELM327();
   //elm327.connectingToELM327BT("303A,64,D36B2E");
+  lcd.displayMainPage();
   Serial.println("setup done");
 }
 
@@ -63,8 +67,10 @@ void loop()
   Serial.println(" paliwo");
   Serial.print(elm327.engineLoad());
   Serial.println(" obciazenie silnika");
-  Serial.print(temperatureInside());
+  double t = temperatureInside();
+  Serial.print(t);
   Serial.println(" temperatura");
+
   delay(100);
 }
 
