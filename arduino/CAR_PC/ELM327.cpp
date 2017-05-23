@@ -28,8 +28,9 @@ String ELM327::recvFromOBDII() {
   String recvString;
   delay(100);
   while (SerialBluetooth.available() > 0) {
-    recvString += SerialBluetooth.readString();
+    recvString += SerialBluetooth.readStringUntil('>');
   }
+  SerialBluetooth.flush();
   return recvString;
 }
 
