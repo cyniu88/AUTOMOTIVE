@@ -1,17 +1,21 @@
+#include <SoftwareSerial.h>
+SoftwareSerial gps(D2,D3);
 
 void setup() {
   Serial.begin(9600);
-  Serial1.begin(38400);
-
+  gps.begin(9600);
+  delay(1000);
+  Serial.println("done");
 }
 
 void loop() {
  if (Serial.available()){
-  Serial1.write(Serial.read());
+  Serial.print(".");
+  gps.write(Serial.read());
  }
 
-if (Serial1.available()){
-  Serial.write(Serial1.read());
+if (gps.available()){
+  Serial.write(gps.read());
  }
  delay(1);
 }
