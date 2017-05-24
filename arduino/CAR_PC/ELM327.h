@@ -21,7 +21,7 @@ class ELM327
     void connectingToELM327BT(String MAC_ELM327);
     void setupELM327();
     int engineCoolantTemperature();
-    double fuelTankLevel();
+    int fuelTankLevel();
     float getVoltage();
     int engineLoad();
 };

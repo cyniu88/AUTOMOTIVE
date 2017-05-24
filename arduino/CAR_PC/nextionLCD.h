@@ -10,5 +10,10 @@ class NEXTION_LCD
     NEXTION_LCD() ;
     void sendEndMSG();
     void displayMainPage();
+    void displayVoltage(String str);
+    void displayFuel(String str);
+    void displayTemp(String str);
+    void displayCoolant(String str);
+    void displayLoad(String str);
 };
 #endif

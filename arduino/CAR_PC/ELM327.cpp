@@ -51,14 +51,14 @@ bool ELM327::isConnectedToBluetooth() {
     Serial.println(buf);
     return true;
   }
-  digitalWrite(m_ATpin,HIGH);
+  digitalWrite(m_ATpin, HIGH);
   sendATCommand("AT");
   String buf  = SerialBluetooth.readStringUntil('\n');
   Serial.print("odebralem: ");
   Serial.println(buf);
   if (buf[0] == 'O' && buf[1] == 'K')
   {
-    digitalWrite(m_ATpin,LOW);
+    digitalWrite(m_ATpin, LOW);
     return true;
   }
   return false;
@@ -107,7 +107,7 @@ void ELM327::connectingToELM327BT(String MAC_ELM327) {
   Serial.println(recvATCommand());
   Serial.println("done");
 }
-void ELM327::setupELM327(){
+void ELM327::setupELM327() {
   sendATCommand("AT E0");
   Serial.println(recvATCommand());
   sendATCommand("AT SP 0");
@@ -119,35 +119,36 @@ int ELM327::engineCoolantTemperature() {
   String temp;
   sendATCommandToOBDII("0105");
   temp = recvFromOBDII();
-  temperature = USEFUL::hexToDec(temp.substring(6,8));
+  Serial.println(temp.substring(4, 6));
+  temperature = USEFUL::hexToDec(temp.substring(4, 6));
   return temperature - 40;
 }
-double ELM327::fuelTankLevel() {
-  double level;
+int ELM327::fuelTankLevel() {
+  int level;
   String temp;
   sendATCommandToOBDII("012F");
   temp = recvFromOBDII();
-  level = USEFUL::hexToDec(temp.substring(6,8));
+  level = USEFUL::hexToDec(temp.substring(4, 6));
   return (level * 100) / 255;
 }
 
 float ELM327::getVoltage() {
   float level;
-  String temp="cyniu";
-   sendATCommandToOBDII("AT RV");
+  String temp = "cyniu";
+  sendATCommandToOBDII("AT RV");
   //sendATCommandToOBDII("AT+pswd");
   temp = recvFromOBDII();
   Serial.println("odebralem voltage:" + temp);
-  temp=temp.substring(0,6);
+  temp = temp.substring(0, 6);
   level = temp.toFloat();
   return level;
 }
-int ELM327::engineLoad(){
-   int load = 0;
+int ELM327::engineLoad() {
+  int load = 1;
   String temp;
   sendATCommandToOBDII("0104");
   temp = recvFromOBDII();
-  load = USEFUL::hexToDec(temp.substring(6,8));
-  return (load / 255)*100;
+  load = USEFUL::hexToDec(temp.substring(4, 6));
+  return (load / 255) * 100;
 }
 

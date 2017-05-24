@@ -16,7 +16,7 @@ DallasTemperature sensors(&oneWire);
 DeviceAddress insideThermometer = {
   0x28, 0xFF, 0xAC, 0xBC, 0x80, 0x16, 0x05, 0xC2
 };
-
+volatile int buf =0;
 ELM327 elm327;
 NEXTION_LCD lcd;
 const byte stateHC05pin = 3;
@@ -58,19 +58,24 @@ void loop()
     }
     bufor = "";
   }
-  //Serial.println("working");
-  Serial.print(elm327.getVoltage());
+  buf = elm327.getVoltage();
+  lcd.displayVoltage( String(buf) );
+  Serial.print(buf);
   Serial.println(" VOLT");
-  Serial.print(elm327.engineCoolantTemperature());
+  buf = elm327.engineCoolantTemperature();
+  lcd.displayCoolant( String(buf));
+  Serial.print(buf);
   Serial.println(" temperature");
-  Serial.print(elm327.fuelTankLevel());
+  buf = elm327.fuelTankLevel();
+  lcd.displayFuel(String(buf));
+  Serial.print(buf);
   Serial.println(" paliwo");
   Serial.print(elm327.engineLoad());
   Serial.println(" obciazenie silnika");
   double t = temperatureInside();
   Serial.print(t);
   Serial.println(" temperatura");
-
-  delay(100);
+  lcd.displayTemp(String (t));
+  delay(1000);
 }
 
