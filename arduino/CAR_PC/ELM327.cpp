@@ -139,7 +139,7 @@ float ELM327::getVoltage() {
   //sendATCommandToOBDII("AT+pswd");
   temp = recvFromOBDII();
   Serial.println("odebralem voltage:" + temp);
-  temp = temp.substring(0, 6);
+  temp = temp.substring(0,3);
   level = temp.toFloat();
   return level;
 }

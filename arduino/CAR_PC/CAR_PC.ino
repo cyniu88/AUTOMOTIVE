@@ -17,6 +17,7 @@ DeviceAddress insideThermometer = {
   0x28, 0xFF, 0xAC, 0xBC, 0x80, 0x16, 0x05, 0xC2
 };
 volatile int buf =0;
+volatile float voltBuf = 0;
 ELM327 elm327;
 NEXTION_LCD lcd;
 const byte stateHC05pin = 3;
@@ -58,9 +59,9 @@ void loop()
     }
     bufor = "";
   }
-  buf = elm327.getVoltage();
-  lcd.displayVoltage( String(buf) );
-  Serial.print(buf);
+  voltBuf = elm327.getVoltage();
+  lcd.displayVoltage( String(voltBuf) );
+  Serial.print(voltBuf);
   Serial.println(" VOLT");
   buf = elm327.engineCoolantTemperature();
   lcd.displayCoolant( String(buf));
