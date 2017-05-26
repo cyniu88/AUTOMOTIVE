@@ -18,6 +18,7 @@ class ELM327
     void init(unsigned int bitrate, byte statePin, byte ATpin);
     bool isConnectedToBluetooth();
     bool isELM327Connected();
+    void elm327WaitForReady();
     void connectingToELM327BT(String MAC_ELM327);
     void setupELM327();
     int engineCoolantTemperature();

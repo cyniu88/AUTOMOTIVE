@@ -71,6 +71,13 @@ bool  ELM327::isELM327Connected() {
   }
   return false;
 }
+void ELM327::elm327WaitForReady() {
+  sendATCommand("ATI");
+  String content = recvATCommand();
+  while (content.indexOf("ELM") > 0) {
+    delay(500);
+  }
+}
 void ELM327::connectingToELM327BT(String MAC_ELM327) {
 
   isConnectedToBluetooth();
@@ -139,7 +146,7 @@ float ELM327::getVoltage() {
   //sendATCommandToOBDII("AT+pswd");
   temp = recvFromOBDII();
   Serial.println("odebralem voltage:" + temp);
-  temp = temp.substring(0,3);
+  temp = temp.substring(0, 3);
   level = temp.toFloat();
   return level;
 }
