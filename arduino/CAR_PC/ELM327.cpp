@@ -74,8 +74,11 @@ bool  ELM327::isELM327Connected() {
 void ELM327::elm327WaitForReady() {
   sendATCommand("ATI");
   String content = recvATCommand();
-  while (content.indexOf("ELM") > 0) {
+  Serial.println(content.indexOf("ELM"));
+  Serial.println(content);
+  while (content.indexOf("ELM") < 0) {
     delay(500);
+    Serial.println("no elm!");
   }
 }
 void ELM327::connectingToELM327BT(String MAC_ELM327) {
@@ -119,6 +122,14 @@ void ELM327::setupELM327() {
   Serial.println(recvATCommand());
   sendATCommand("AT SP 0");
   Serial.println(recvATCommand());
+  sendATCommand("AT S0");
+  Serial.println(recvATCommand());
+}
+void ELM327::setPcmHeader() {
+  sendATCommand("ATSH0007E0");
+  Serial.println(recvATCommand());
+  sendATCommand("ATCRA7E8");
+  Serial.println(recvATCommand());
 }
 
 int ELM327::engineCoolantTemperature() {
@@ -126,7 +137,7 @@ int ELM327::engineCoolantTemperature() {
   String temp;
   sendATCommandToOBDII("0105");
   temp = recvFromOBDII();
-  Serial.println(temp.substring(4, 6));
+  Serial.println(temp.substring(4, 7));
   temperature = USEFUL::hexToDec(temp.substring(4, 6));
   return temperature - 40;
 }
@@ -155,7 +166,26 @@ int ELM327::engineLoad() {
   String temp;
   sendATCommandToOBDII("0104");
   temp = recvFromOBDII();
+  Serial.println(temp.substring(4, 6));
   load = USEFUL::hexToDec(temp.substring(4, 6));
   return (load / 255) * 100;
+}
+
+bool ELM327::breakON() {
+  sendATCommandToOBDII("222B001");
+  String temp = recvFromOBDII();
+  if (temp[6] == '2') {
+    return false;
+  }
+  return true;
+}
+
+int ELM327::ambientAirTemperature() {
+  int temperature = 0;
+  String temp;
+  sendATCommandToOBDII("0146");
+  temp = recvFromOBDII();
+  temperature = USEFUL::hexToDec(temp.substring(4, 6));
+  return temperature - 40;
 }
 

@@ -21,9 +21,12 @@ class ELM327
     void elm327WaitForReady();
     void connectingToELM327BT(String MAC_ELM327);
     void setupELM327();
+    void setPcmHeader();
     int engineCoolantTemperature();
     int fuelTankLevel();
     float getVoltage();
     int engineLoad();
+    bool breakON();
+    int ambientAirTemperature();
 };
 #endif
