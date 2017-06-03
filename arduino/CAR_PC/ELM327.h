@@ -28,5 +28,7 @@ class ELM327
     int engineLoad();
     bool breakON();
     int ambientAirTemperature();
+    long runTimeEngineStart();
+    int odometerCurrent();
 };
 #endif

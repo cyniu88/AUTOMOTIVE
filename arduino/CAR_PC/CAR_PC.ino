@@ -52,11 +52,11 @@ void setup()
   while (!elm327.isConnectedToBluetooth()) {
     Serial.print('.');
   }
-  elm327.elm327WaitForReady();
+  //elm327.elm327WaitForReady();
   elm327.setupELM327();
   lcd.displayMainPage();
 
-  displayTemperature("cyniu");
+  displayText("cyniu");
   Serial.println("setup done");
 }
 
@@ -87,9 +87,12 @@ void loop()
   Serial.print(elm327.engineLoad());
   Serial.println(" obciazenie silnika");
   double t = temperatureInside();
+  String txt = String(t);
+  txt.remove(txt.length()-1, txt.length());
   Serial.print(t);
   Serial.println(" temperatura");
-  lcd.displayTemp(String (t));
+  lcd.displayTemp(txt);
+  displayTemperature(txt);
   delay(1000);
 }
 
@@ -106,5 +109,15 @@ void displayTemperature(String str) {
   display.setTextSize(3);
   display.setTextColor(WHITE);
   display.print(str + (char)247 + 'c');
+  display.display();
+}
+
+void displayText(String str) {
+  // Clear the buffer.
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.setTextSize(3);
+  display.setTextColor(WHITE);
+  display.print(str);
   display.display();
 }

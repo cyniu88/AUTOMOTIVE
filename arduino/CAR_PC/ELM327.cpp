@@ -189,3 +189,33 @@ int ELM327::ambientAirTemperature() {
   return temperature - 40;
 }
 
+long ELM327::runTimeEngineStart() {
+  //011F   256A+B  return seconds
+  int A = 0;
+  int B = 0;
+  String temp;
+  sendATCommandToOBDII("011F");
+  temp = recvFromOBDII();
+  A = USEFUL::hexToDec(temp.substring(4, 6));
+  B = USEFUL::hexToDec(temp.substring(6, 8));
+  return 256 * A + B;
+}
+int ELM327::odometerCurrent() {
+  // 0131  256A+B   km
+  static int km = 0;
+  String temp;
+  int A,B;
+  if (km == 0) {
+    sendATCommandToOBDII("0131");
+    temp = recvFromOBDII();
+    A = USEFUL::hexToDec(temp.substring(4, 6));
+    B = USEFUL::hexToDec(temp.substring(6, 8));
+    km = 256 * A + B;
+  }
+  sendATCommandToOBDII("0131");
+  temp = recvFromOBDII();
+  A = USEFUL::hexToDec(temp.substring(4, 6));
+  B = USEFUL::hexToDec(temp.substring(6, 8));
+  return 256*A+B-km;
+}
+
