@@ -45,4 +45,16 @@ void USEFUL::freeMode() {
   }
   Serial.println("stop free mode");
 }
+String USEFUL::convertSecToHMstring(int sec){
+  String h;
+  String m;
+  int hInt;
+  int mInt;
+  mInt = sec / 60;
+  hInt = mInt / 60;
+  mInt = mInt - hInt * 60;
+  m  = String(mInt);
+  h = String(hInt);
+  return h+" h "+m+" m";
+}
 

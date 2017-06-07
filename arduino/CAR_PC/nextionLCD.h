@@ -15,5 +15,7 @@ class NEXTION_LCD
     void displayTemp(String str);
     void displayCoolant(String str);
     void displayLoad(String str);
+    void displayOdometer(String str);
+    void displayRuntime(String str);
 };
 #endif
