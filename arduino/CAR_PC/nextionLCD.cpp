@@ -26,7 +26,7 @@ void NEXTION_LCD::displayFuel(String str) {
   sendEndMSG();
 }
 void NEXTION_LCD::displayTemp(String str) {
-  nextionLCD_RS232.write("main.loa.txt=\"");
+  nextionLCD_RS232.write("main.temp.txt=\"");
   nextionLCD_RS232.write(str.c_str());
   nextionLCD_RS232.write("\"");
   sendEndMSG();
@@ -39,6 +39,18 @@ void NEXTION_LCD::displayCoolant(String str) {
 }
 void NEXTION_LCD::displayLoad(String str) {
   nextionLCD_RS232.write("main.loa.txt=\"");
+  nextionLCD_RS232.write(str.c_str());
+  nextionLCD_RS232.write("\"");
+  sendEndMSG();
+}
+void NEXTION_LCD::displayOdometer(String str){
+  nextionLCD_RS232.write("main.odom.txt=\"");
+  nextionLCD_RS232.write(str.c_str());
+  nextionLCD_RS232.write("\"");
+  sendEndMSG();
+}
+void NEXTION_LCD::displayRuntime(String str){
+  nextionLCD_RS232.write("main.time.txt=\"");
   nextionLCD_RS232.write(str.c_str());
   nextionLCD_RS232.write("\"");
   sendEndMSG();
