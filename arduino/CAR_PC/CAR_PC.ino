@@ -21,8 +21,7 @@ DallasTemperature sensors(&oneWire);
 DeviceAddress insideThermometer = {
   0x28, 0xFF, 0xAC, 0xBC, 0x80, 0x16, 0x05, 0xC2
 };
-volatile int buf = 0;
-volatile float voltBuf = 0;
+
 
 ELM327 elm327;
 NEXTION_LCD lcd;
@@ -42,7 +41,7 @@ void setup()
 
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 128x32)
   display.display();
-  
+
   sensors.begin();
   sensors.setResolution(insideThermometer , TEMPERATURE_PRECISION);
 
@@ -72,31 +71,49 @@ void loop()
     }
     bufor = "";
   }
-  voltBuf = elm327.getVoltage();
-  lcd.displayVoltage( String(voltBuf) );
-  Serial.print(voltBuf);
-  Serial.println(" VOLT");
-  buf = elm327.engineCoolantTemperature();
-  lcd.displayCoolant( String(buf));
-  Serial.print(buf);
-  Serial.println(" temperature");
-  buf = elm327.fuelTankLevel();
-  lcd.displayFuel(String(buf));
-  Serial.print(buf);
-  Serial.println(" paliwo");
-  Serial.print(elm327.engineLoad());
-  Serial.println(" obciazenie silnika");
-  double t = temperatureInside();
-  String txt = String(t);
-  txt.remove(txt.length()-1, txt.length());
-  Serial.print(t);
-  Serial.println(" temperatura");
-  lcd.displayTemp(txt);
-  displayTemperature(txt);
+
+odometer();
+coolant();
+fuel();
+temperatureInsideCar();
+
   delay(1000);
 }
 
-
+void coolant() {
+  String buf = String(elm327.engineCoolantTemperature());
+  lcd.displayCoolantBar(buf);
+  lcd.displayCoolant( buf);
+}
+void voltage() {
+  String voltBuf = String(elm327.getVoltage());
+  lcd.displayVoltage( voltBuf );
+}
+void fuel() {
+  String buf = String (elm327.fuelTankLevel());
+  lcd.displayFuelBar(buf);
+  lcd.displayFuel(buf);
+}
+void temperatureInsideCar() {
+  double t = temperatureInside();
+  String txt = String(t);
+  txt.remove(txt.length() - 1, txt.length());
+  lcd.displayTemp(txt);
+  displayTemperature(txt);
+}
+void odometer(){
+  String odo = String(elm327.odometerCurrent());
+  lcd.displayOdometer(odo);
+}
+void runtime(){
+  
+}
+void engineLoad(){
+  
+}
+void breakUsage(){
+  
+}
 void displayTemperature(String str) {
   // Clear the buffer.
   display.clearDisplay();
