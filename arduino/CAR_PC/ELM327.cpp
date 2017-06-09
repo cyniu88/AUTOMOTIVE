@@ -13,7 +13,7 @@ void ELM327::sendATCommand(String command) {
 }
 String ELM327::recvATCommand() {
   String recvString;
-  Serial.print("recv: ");
+  //Serial.print("recv: ");
   delay(100);
   while (SerialBluetooth.available() > 0) {
     recvString += SerialBluetooth.readString();
@@ -47,8 +47,8 @@ bool ELM327::isConnectedToBluetooth() {
   if (digitalRead(m_statePin) == HIGH) {
     sendATCommand("ATI");
     String buf  = SerialBluetooth.readStringUntil('\n');
-    Serial.print("odebralem w low: ");
-    Serial.println(buf);
+   // Serial.print("odebralem w low: ");
+    //Serial.println(buf);
     return true;
   }
   digitalWrite(m_ATpin, HIGH);
@@ -137,7 +137,7 @@ int ELM327::engineCoolantTemperature() {
   String temp;
   sendATCommandToOBDII("0105");
   temp = recvFromOBDII();
-  Serial.println(temp.substring(4, 7));
+  //Serial.println(temp.substring(4, 7));
   temperature = USEFUL::hexToDec(temp.substring(4, 6));
   return temperature - 40;
 }
@@ -156,7 +156,7 @@ float ELM327::getVoltage() {
   sendATCommandToOBDII("AT RV");
   //sendATCommandToOBDII("AT+pswd");
   temp = recvFromOBDII();
-  Serial.println("odebralem voltage:" + temp);
+ // Serial.println("odebralem voltage:" + temp);
   temp = temp.substring(0, 3);
   level = temp.toFloat();
   return level;
@@ -166,7 +166,7 @@ int ELM327::engineLoad() {
   String temp;
   sendATCommandToOBDII("0104");
   temp = recvFromOBDII();
-  Serial.println(temp.substring(4, 6));
+  //Serial.println(temp.substring(4, 6));
   load = USEFUL::hexToDec(temp.substring(4, 6));
   return (load / 255) * 100;
 }

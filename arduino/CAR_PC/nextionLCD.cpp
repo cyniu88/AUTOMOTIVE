@@ -7,6 +7,13 @@ void NEXTION_LCD::sendEndMSG() {
   nextionLCD_RS232.write(0xFF);
   nextionLCD_RS232.write(0xFF);
   nextionLCD_RS232.write(0xFF);
+
+  if (nextionLCD_RS232.available() > 0) {
+    while (nextionLCD_RS232.available() > 0) {
+      Serial.print(nextionLCD_RS232.read());
+    }
+    Serial.println("");
+  }
 }
 void NEXTION_LCD::displayMainPage() {
   nextionLCD_RS232.write("page 1");
@@ -17,6 +24,11 @@ void NEXTION_LCD::displayVoltage(String str) {
   nextionLCD_RS232.write("main.vol.txt=\"");
   nextionLCD_RS232.write(str.c_str());
   nextionLCD_RS232.write("\"");
+  sendEndMSG();
+}
+void NEXTION_LCD::displayFuelBar(String i) {
+  nextionLCD_RS232.write("main.fuelLevel.val=");
+  nextionLCD_RS232.write(i.c_str());
   sendEndMSG();
 }
 void NEXTION_LCD::displayFuel(String str) {
@@ -31,6 +43,31 @@ void NEXTION_LCD::displayTemp(String str) {
   nextionLCD_RS232.write("\"");
   sendEndMSG();
 }
+void NEXTION_LCD::displayCoolantBar(String str) {
+  int temp = str.toInt();
+  if (temp > 40 && temp < 91 && levelCoolant != NORMAL) {
+    setCoolantIcon(NORMAL);
+    levelCoolant = NORMAL;
+  }
+  else if (temp >= 91 && levelCoolant != HOT) {
+    levelCoolant = HOT;
+    setCoolantIcon(HOT);
+  }
+  else if (temp <= 40 && levelCoolant != COLD) {
+    levelCoolant = COLD;
+    setCoolantIcon(COLD);
+  }
+  if (temp < -10 ) {
+    temp = -10;
+  }
+  else if (temp > 110){
+    temp = 110;
+  }
+  str = String(map(temp, -10, 110, 0, 100   ));
+  nextionLCD_RS232.write("main.tempBar.val=");
+  nextionLCD_RS232.write(str.c_str());
+  sendEndMSG();
+}
 void NEXTION_LCD::displayCoolant(String str) {
   nextionLCD_RS232.write("main.wat.txt=\"");
   nextionLCD_RS232.write(str.c_str());
@@ -43,16 +80,21 @@ void NEXTION_LCD::displayLoad(String str) {
   nextionLCD_RS232.write("\"");
   sendEndMSG();
 }
-void NEXTION_LCD::displayOdometer(String str){
+void NEXTION_LCD::displayOdometer(String str) {
   nextionLCD_RS232.write("main.odom.txt=\"");
+  nextionLCD_RS232.write(str.c_str());
+  nextionLCD_RS232.write(" KM\"");
+  sendEndMSG();
+}
+void NEXTION_LCD::displayRuntime(String str) {
+  nextionLCD_RS232.write("main.time.txt=\"");
   nextionLCD_RS232.write(str.c_str());
   nextionLCD_RS232.write("\"");
   sendEndMSG();
 }
-void NEXTION_LCD::displayRuntime(String str){
-  nextionLCD_RS232.write("main.time.txt=\"");
-  nextionLCD_RS232.write(str.c_str());
-  nextionLCD_RS232.write("\"");
+void NEXTION_LCD::setCoolantIcon(TEMPERATURELEVEL i) {
+  nextionLCD_RS232.write("main.watIcon.pic=");
+  nextionLCD_RS232.write(String(i).c_str());
   sendEndMSG();
 }
 
