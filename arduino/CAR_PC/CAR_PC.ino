@@ -73,11 +73,14 @@ void loop()
     bufor = "";
   }
 
-odometer();
-coolant();
-fuel();
-temperatureInsideCar();
-
+  odometer();
+  coolant();
+  fuel();
+  temperatureInsideCar();
+  runtime();
+  engineLoad();
+  breakUsage();
+  
   delay(1000);
 }
 
@@ -102,18 +105,31 @@ void temperatureInsideCar() {
   lcd.displayTemp(txt);
   displayTemperature(txt);
 }
-void odometer(){
+void odometer() {
   String odo = String(elm327.odometerCurrent());
   lcd.displayOdometer(odo);
 }
-void runtime(){
-  
+void runtime() {
+  long time1 = elm327.runTimeEngineStart();
+  String str = USEFUL::convertSecToHMstring(time1);
+  lcd.displayRuntime(str);
 }
-void engineLoad(){
-  
+void engineLoad() {
+  int load = elm327.engineLoad();
+  lcd.displayLoad(String(load)+"%");
 }
-void breakUsage(){
-  
+void breakUsage() {
+  static bool breakStatus = elm327.breakON();
+  static bool breakOld ;
+  static unsigned int counter  = 0;
+  if (breakOld == false && breakStatus == true){
+    lcd.displayBreakStat("BREAK");
+    counter++;
+  }
+  else if (breakOld == true && breakStatus == false){
+    lcd.displayBreakStat("---");
+  }
+  breakOld = breakStatus;
 }
 void displayTemperature(String str) {
   // Clear the buffer.

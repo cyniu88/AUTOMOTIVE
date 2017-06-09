@@ -45,7 +45,7 @@ void USEFUL::freeMode() {
   }
   Serial.println("stop free mode");
 }
-String USEFUL::convertSecToHMstring(int sec){
+String USEFUL::convertSecToHMstring(long sec){
   String h;
   String m;
   int hInt;

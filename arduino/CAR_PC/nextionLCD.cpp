@@ -97,4 +97,10 @@ void NEXTION_LCD::setCoolantIcon(TEMPERATURELEVEL i) {
   nextionLCD_RS232.write(String(i).c_str());
   sendEndMSG();
 }
+void NEXTION_LCD::displayBreakStat(String str){
+  nextionLCD_RS232.write("main.break.txt=\"");
+  nextionLCD_RS232.write(str.c_str());
+  nextionLCD_RS232.write("\"");
+  sendEndMSG();
+}
 
