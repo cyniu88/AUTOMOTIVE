@@ -51,7 +51,7 @@ void setup()
   while (!elm327.isConnectedToBluetooth()) {
     Serial.print('.');
   }
-  //elm327.elm327WaitForReady();
+  elm327.elm327WaitForReady();
   elm327.setupELM327();
   elm327.setPcmHeader();
   lcd.displayMainPage();
@@ -74,14 +74,26 @@ void loop()
   }
 
   odometer();
+  engineLoad();
+  breakUsage();
   coolant();
+  engineLoad();
+  breakUsage();
   fuel();
+  engineLoad();
+  breakUsage();
   temperatureInsideCar();
+  engineLoad();
+  breakUsage();
   runtime();
   engineLoad();
   breakUsage();
-  
-  delay(1000);
+  engineLoad();
+  breakUsage();
+  voltage();
+  engineLoad();
+  breakUsage();
+  delay(50);
 }
 
 void coolant() {
@@ -91,6 +103,7 @@ void coolant() {
 }
 void voltage() {
   String voltBuf = String(elm327.getVoltage());
+  Serial.println (voltBuf);
   lcd.displayVoltage( voltBuf );
 }
 void fuel() {
@@ -119,12 +132,15 @@ void engineLoad() {
   lcd.displayLoad(String(load)+"%");
 }
 void breakUsage() {
-  static bool breakStatus = elm327.breakON();
+  bool breakStatus = elm327.breakON();
+  Serial.print("BREAKSTATUS: ");
+  Serial.println(breakStatus);
   static bool breakOld ;
   static unsigned int counter  = 0;
   if (breakOld == false && breakStatus == true){
-    lcd.displayBreakStat("BREAK");
+    lcd.displayBreakStat("BREAK!");
     counter++;
+    lcd.displayBreakCounter(counter);
   }
   else if (breakOld == true && breakStatus == false){
     lcd.displayBreakStat("---");

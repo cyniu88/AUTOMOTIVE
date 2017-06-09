@@ -168,12 +168,16 @@ int ELM327::engineLoad() {
   temp = recvFromOBDII();
   //Serial.println(temp.substring(4, 6));
   load = USEFUL::hexToDec(temp.substring(4, 6));
-  return (load / 255) * 100;
+  //Serial.print("LOAD: ");
+  //Serial.println(load);
+  return (load / 2.55) ;
 }
 
 bool ELM327::breakON() {
   sendATCommandToOBDII("222B001");
   String temp = recvFromOBDII();
+ // Serial.print("BREAK: ");
+  //Serial.println(temp);
   if (temp[6] == '2') {
     return false;
   }
@@ -205,7 +209,7 @@ int ELM327::odometerCurrent() {
   static int km = 0;
   String temp;
   int A,B;
-  if (km == 0) {
+  if (km <= 0) {
     sendATCommandToOBDII("0131");
     temp = recvFromOBDII();
     A = USEFUL::hexToDec(temp.substring(4, 6));

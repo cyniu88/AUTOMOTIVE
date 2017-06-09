@@ -103,4 +103,9 @@ void NEXTION_LCD::displayBreakStat(String str){
   nextionLCD_RS232.write("\"");
   sendEndMSG();
 }
+void NEXTION_LCD::displayBreakCounter(int i){
+  nextionLCD_RS232.write("main.n0.val=");
+  nextionLCD_RS232.write(String(i).c_str());
+  sendEndMSG();  
+}
 

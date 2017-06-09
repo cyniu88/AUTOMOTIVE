@@ -26,5 +26,6 @@ class NEXTION_LCD
     void displayFuelBar(String i);
     void displayCoolantBar(String str);
     void displayBreakStat(String str);
+    void displayBreakCounter(int i);
 };
 #endif
