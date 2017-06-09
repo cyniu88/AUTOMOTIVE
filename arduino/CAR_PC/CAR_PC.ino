@@ -53,6 +53,7 @@ void setup()
   }
   //elm327.elm327WaitForReady();
   elm327.setupELM327();
+  elm327.setPcmHeader();
   lcd.displayMainPage();
 
   displayText("cyniu");
