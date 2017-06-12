@@ -177,16 +177,21 @@ int ELM327::engineLoad() {
   return (load / 2.55) ;
 }
 
-bool ELM327::breakON() {
+CAR_BRAKE ELM327::brakeON() {
   sendATCommandToOBDII("222B001");
   String temp = recvFromOBDII();
-  Serial.print("BREAK: ");
-  Serial.println(temp);
-  if (temp[6] == '2') {
-    // 2 reczny, E reczny + hamulec , 0 nie ma nic  C sam hamulec
-    return false;
+  //Serial.print("BREAK: ");
+  //Serial.println(temp);
+  switch (temp[6]) {
+    case 'C':
+      return CAR_BRAKE::ON;
+    case '2':
+      return CAR_BRAKE::PARKING_BRAKE;
+    case 'E':
+      return CAR_BRAKE::BOTH_BRAKE;
+    default:
+      return CAR_BRAKE::OFF;
   }
-  return true;
 }
 
 int ELM327::ambientAirTemperature() {

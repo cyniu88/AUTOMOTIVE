@@ -75,24 +75,24 @@ void loop()
 
   odometer();
   engineLoad();
-  breakUsage();
+  brakeUse();
   coolant();
   engineLoad();
-  breakUsage();
+  brakeUse();
   fuel();
   engineLoad();
-  breakUsage();
+  brakeUse();
   temperatureInsideCar();
   engineLoad();
-  breakUsage();
+  brakeUse();
   runtime();
   engineLoad();
-  breakUsage();
+  brakeUse();
   engineLoad();
-  breakUsage();
+  brakeUse();
   voltage();
   engineLoad();
-  breakUsage();
+  brakeUse();
   delay(50);
 }
 
@@ -129,23 +129,33 @@ void runtime() {
 }
 void engineLoad() {
   int load = elm327.engineLoad();
-  lcd.displayLoad(String(load)+"%");
+  lcd.displayLoad(String(load) + "%");
 }
-void breakUsage() {
-  bool breakStatus = elm327.breakON();
-  //Serial.print("BREAKSTATUS: ");
-  //Serial.println(breakStatus);
-  static bool breakOld ;
+void brakeUse() {
+  CAR_BRAKE statusNow = elm327.brakeON();
+  static bool parkingBrakeStatus = false;
+  static bool brakeStatus = false;
+
   static unsigned int counter  = 0;
-  if (breakOld == false && breakStatus == true){
-    lcd.displayBreakStat("BREAK!");
+  if ((statusNow == CAR_BRAKE::ON || statusNow == CAR_BRAKE::BOTH_BRAKE) && brakeStatus == false) {
+    lcd.displayBrakeStat("BRAKE!");
     counter++;
-    lcd.displayBreakCounter(counter);
+    lcd.displayBrakeCounter(counter);
+    brakeStatus = true;
   }
-  else if (breakOld == true && breakStatus == false){
-    lcd.displayBreakStat("---");
+  else if ((statusNow == CAR_BRAKE::OFF || statusNow == CAR_BRAKE::PARKING_BRAKE) && brakeStatus == true) {
+    lcd.displayBrakeStat("---");
+    brakeStatus = false;
   }
-  breakOld = breakStatus;
+  else if ((statusNow == CAR_BRAKE::BOTH_BRAKE || statusNow == CAR_BRAKE::PARKING_BRAKE) && parkingBrakeStatus == false) {
+    lcd.displayParkingBrake(true);
+    parkingBrakeStatus = true;
+  }
+  else if ((statusNow == CAR_BRAKE::OFF || statusNow == CAR_BRAKE::ON) && parkingBrakeStatus == true) {
+    lcd.displayParkingBrake(false);
+    parkingBrakeStatus = false;
+  }
+
 }
 void displayTemperature(String str) {
   // Clear the buffer.

@@ -60,7 +60,7 @@ void NEXTION_LCD::displayCoolantBar(String str) {
   if (temp < -10 ) {
     temp = -10;
   }
-  else if (temp > 110){
+  else if (temp > 110) {
     temp = 110;
   }
   str = String(map(temp, -10, 110, 0, 100   ));
@@ -97,15 +97,27 @@ void NEXTION_LCD::setCoolantIcon(TEMPERATURELEVEL i) {
   nextionLCD_RS232.write(String(i).c_str());
   sendEndMSG();
 }
-void NEXTION_LCD::displayBreakStat(String str){
-  nextionLCD_RS232.write("main.break.txt=\"");
+void NEXTION_LCD::displayBrakeStat(String str) {
+  nextionLCD_RS232.write("main.brake.txt=\"");
   nextionLCD_RS232.write(str.c_str());
   nextionLCD_RS232.write("\"");
   sendEndMSG();
 }
-void NEXTION_LCD::displayBreakCounter(int i){
-  nextionLCD_RS232.write("main.n0.val=");
+void NEXTION_LCD::displayBrakeCounter(int i) {
+  nextionLCD_RS232.write("main.counter.val=");
   nextionLCD_RS232.write(String(i).c_str());
-  sendEndMSG();  
+  sendEndMSG();
+}
+
+void NEXTION_LCD::displayParkingBrake(bool s) {
+  if (s == true) {
+    nextionLCD_RS232.write("page parking");
+    sendEndMSG();
+  }
+  else
+  {
+    nextionLCD_RS232.write("page main");
+    sendEndMSG();
+  }
 }
 

@@ -25,7 +25,8 @@ class NEXTION_LCD
     void displayRuntime(String str);
     void displayFuelBar(String i);
     void displayCoolantBar(String str);
-    void displayBreakStat(String str);
-    void displayBreakCounter(int i);
+    void displayBrakeStat(String str);
+    void displayBrakeCounter(int i);
+    void displayParkingBrake(bool s);
 };
 #endif

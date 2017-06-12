@@ -2,7 +2,12 @@
 #define ELM327_H
 #include <Arduino.h>
 #include "useful.h"
-
+enum class CAR_BRAKE{
+  ON,
+  OFF,
+  PARKING_BRAKE,
+  BOTH_BRAKE
+};
 class ELM327
 {
     byte m_statePin;
@@ -26,7 +31,7 @@ class ELM327
     int fuelTankLevel();
     float getVoltage();
     int engineLoad();
-    bool breakON();
+    CAR_BRAKE brakeON();
     int ambientAirTemperature();
     long runTimeEngineStart();
     int odometerCurrent();
