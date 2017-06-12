@@ -103,7 +103,7 @@ void coolant() {
 }
 void voltage() {
   String voltBuf = String(elm327.getVoltage());
-  Serial.println (voltBuf);
+  //Serial.println (voltBuf);
   lcd.displayVoltage( voltBuf );
 }
 void fuel() {
@@ -133,8 +133,8 @@ void engineLoad() {
 }
 void breakUsage() {
   bool breakStatus = elm327.breakON();
-  Serial.print("BREAKSTATUS: ");
-  Serial.println(breakStatus);
+  //Serial.print("BREAKSTATUS: ");
+  //Serial.println(breakStatus);
   static bool breakOld ;
   static unsigned int counter  = 0;
   if (breakOld == false && breakStatus == true){

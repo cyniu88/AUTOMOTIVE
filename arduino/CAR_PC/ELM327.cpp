@@ -47,7 +47,7 @@ bool ELM327::isConnectedToBluetooth() {
   if (digitalRead(m_statePin) == HIGH) {
     sendATCommand("ATI");
     String buf  = SerialBluetooth.readStringUntil('\n');
-   // Serial.print("odebralem w low: ");
+    // Serial.print("odebralem w low: ");
     //Serial.println(buf);
     return true;
   }
@@ -77,6 +77,10 @@ void ELM327::elm327WaitForReady() {
   Serial.println(content.indexOf("ELM"));
   Serial.println(content);
   while (content.indexOf("ELM") < 0) {
+    sendATCommand("ATI");
+    content = recvATCommand();
+    Serial.println(content.indexOf("ELM"));
+    Serial.println(content);
     delay(500);
     Serial.println("no elm!");
   }
@@ -156,7 +160,7 @@ float ELM327::getVoltage() {
   sendATCommandToOBDII("AT RV");
   //sendATCommandToOBDII("AT+pswd");
   temp = recvFromOBDII();
- // Serial.println("odebralem voltage:" + temp);
+  // Serial.println("odebralem voltage:" + temp);
   temp = temp.substring(0, 3);
   level = temp.toFloat();
   return level;
@@ -176,9 +180,10 @@ int ELM327::engineLoad() {
 bool ELM327::breakON() {
   sendATCommandToOBDII("222B001");
   String temp = recvFromOBDII();
- // Serial.print("BREAK: ");
-  //Serial.println(temp);
+  Serial.print("BREAK: ");
+  Serial.println(temp);
   if (temp[6] == '2') {
+    // 2 reczny, E reczny + hamulec , 0 nie ma nic  C sam hamulec
     return false;
   }
   return true;
@@ -208,7 +213,7 @@ int ELM327::odometerCurrent() {
   // 0131  256A+B   km
   static int km = 0;
   String temp;
-  int A,B;
+  int A, B;
   if (km <= 0) {
     sendATCommandToOBDII("0131");
     temp = recvFromOBDII();
@@ -220,6 +225,6 @@ int ELM327::odometerCurrent() {
   temp = recvFromOBDII();
   A = USEFUL::hexToDec(temp.substring(4, 6));
   B = USEFUL::hexToDec(temp.substring(6, 8));
-  return 256*A+B-km;
+  return 256 * A + B - km;
 }
 
