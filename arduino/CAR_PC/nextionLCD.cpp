@@ -19,6 +19,10 @@ void NEXTION_LCD::displayMainPage() {
   nextionLCD_RS232.write("page 1");
   sendEndMSG();
 }
+void NEXTION_LCD::displayConnPage() {
+  nextionLCD_RS232.write("page 0");
+  sendEndMSG();
+}
 
 void NEXTION_LCD::displayVoltage(String str) {
   nextionLCD_RS232.write("main.vol.txt=\"");

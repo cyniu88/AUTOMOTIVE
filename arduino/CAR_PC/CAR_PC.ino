@@ -30,6 +30,7 @@ Adafruit_SSD1306 display( OLED_RESET );
 const byte stateHC05pin = 3;
 const byte ATpin = 4;
 String bufor;
+bool workOK = true;
 double temperatureInside() {
   sensors.requestTemperatures(); // Send the command to get temperatures
   return sensors.getTempC(insideThermometer);
@@ -54,8 +55,8 @@ void setup()
   elm327.elm327WaitForReady();
   elm327.setupELM327();
   elm327.setPcmHeader();
-  lcd.displayMainPage();
-
+  //lcd.displayMainPage();
+  voltage();
   displayText("cyniu");
   Serial.println("setup done");
 }
@@ -72,7 +73,7 @@ void loop()
     }
     bufor = "";
   }
-
+  voltage();
   odometer();
   engineLoad();
   brakeUse();
@@ -90,7 +91,7 @@ void loop()
   brakeUse();
   engineLoad();
   brakeUse();
-  voltage();
+ 
   engineLoad();
   brakeUse();
   delay(50);
@@ -102,7 +103,16 @@ void coolant() {
   lcd.displayCoolant( buf);
 }
 void voltage() {
-  String voltBuf = String(elm327.getVoltage());
+  float volt = elm327.getVoltage();
+  if (volt > 1.0 && workOK == false){
+    lcd.displayMainPage();//daj ekran connections
+    workOK = true;
+  }
+  else if (volt < 1.0 && workOK == true){
+    lcd.displayConnPage();//daj ekran wysetlania danych 
+    workOK = false;
+  }
+  String voltBuf = String(volt);
   //Serial.println (voltBuf);
   lcd.displayVoltage( voltBuf );
 }
